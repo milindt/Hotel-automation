@@ -1,8 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,7 +9,7 @@ class HotelAutomationControllerTest {
 
     @BeforeEach
     void setUp() {
-       Hotel hotel = new Hotel(2, 2, 2);
+        Hotel hotel = new Hotel(2, 2, 2);
     }
 
     @Test
@@ -25,7 +24,7 @@ class HotelAutomationControllerTest {
         assertThat(hotel.getFloors().get(0).getCorridors().size()).isEqualTo(3);
 
         hotel.getFloors()
-            .stream()
+                .stream()
                 .flatMap(f -> f.getCorridors().stream())
                 .forEach(c -> assertThat(c).isInstanceOf(Corridor.class));
     }
@@ -53,7 +52,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneLight() {
-        assertThat(new Corridor(new Light(0, false), null)
+        assertThat(new Corridor(new Light(0, false), null, null)
                 .getLight())
                 .isInstanceOf(Light.class);
     }
@@ -77,7 +76,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneAc() {
-        assertThat(new Corridor(null, new Ac(0, false))
+        assertThat(new Corridor(null, new Ac(0, false), null)
                 .getAc())
                 .isInstanceOf(Ac.class);
     }
@@ -92,7 +91,7 @@ class HotelAutomationControllerTest {
     @Test
     void mainCorridorHasAlltheListsOnByDefault() {
         //Assuming only Night time
-        new Hotel(2, 2,0)
+        new Hotel(2, 2, 0)
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getCorridors().stream())
@@ -102,7 +101,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void subCorridorHasAlltheListsOffByDefault() {
-        new Hotel(2, 2,0)
+        new Hotel(2, 2, 0)
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getSubCorridors().stream())
@@ -113,7 +112,7 @@ class HotelAutomationControllerTest {
     @Test
     void mainCorridorHasAlltheAcsOnByDefault() {
         //Assuming only Night time
-        new Hotel(2, 2,0)
+        new Hotel(2, 2, 0)
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getCorridors().stream())
@@ -123,7 +122,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void subCorridorHasAlltheAcsOnByDefault() {
-        new Hotel(2, 2,0)
+        new Hotel(2, 2, 0)
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getSubCorridors().stream())
@@ -131,5 +130,23 @@ class HotelAutomationControllerTest {
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
+    @Test
+    void eachCorridorCanDetectMotion() {
+        /*Movement detection could a push mechanism,
+         but for sake of simplicity we will poll the sensor
+         for movement detection*/
+        assertThat(new Corridor(null, null, new MotionSensor())
+                .getSensor().isMovement()).isInstanceOf(Boolean.class);
+    }
 
+
+    @Test
+    void controllerCanOperateOnHotels() {
+        //Operate could be called periodically and on any sensor trigger(if/when push is implemented)
+        new HotelAutomationController(Collections.singletonList(
+                new Hotel(1, 2, 4)))
+                .operate();
+    }
+
+    
 }
