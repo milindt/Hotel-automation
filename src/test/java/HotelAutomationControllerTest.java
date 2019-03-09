@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import java.util.Collection;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +54,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneLight() {
-        assertThat(new Corridor(new Light(0, false), null, null)
+        assertThat(new Corridor(new Light(0, false), null)
                 .getLight())
                 .isInstanceOf(Light.class);
     }
@@ -76,7 +78,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneAc() {
-        assertThat(new Corridor(null, new Ac(0, false), null)
+        assertThat(new Corridor(null, new Ac(0, false))
                 .getAc())
                 .isInstanceOf(Ac.class);
     }
@@ -131,22 +133,56 @@ class HotelAutomationControllerTest {
     }
 
     @Test
-    void eachCorridorCanDetectMotion() {
-        /*Movement detection could a push mechanism,
+    void canDetectMotionInCorridors() {
+        /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
-         for movement detection*/
-        assertThat(new Corridor(null, null, new MotionSensor())
-                .getSensor().isMovement()).isInstanceOf(Boolean.class);
+         for movement detection for now*/
+        assertThat(new Corridor(null, null)).isInstanceOf(MotionSensible.class);
     }
 
+    @Test
+    void eachSubCorridorCanDetectMotion() {
+        /*Movement detection could be a push mechanism,
+         but for sake of simplicity we will poll the sensor
+         for movement detection for now*/
+        assertThat(new SubCorridor(null, null)).isInstanceOf(MotionSensible.class);
+    }
 
     @Test
     void controllerCanOperateOnHotels() {
         //Operate could be called periodically and on any sensor trigger(if/when push is implemented)
         new HotelAutomationController(Collections.singletonList(
-                new Hotel(1, 2, 4)))
+                new Hotel(1, 2, 4)), new MotionSensorControl())
                 .operate();
     }
 
-    
+    @Test
+    void whenMotionIsDetectedInSubCorridorsControllerShouldTurnTheLightOn() {
+        //Operate could be called periodically and on any sensor trigger(if/when push is implemented)
+        final MotionSensorControl motionSensorControl = Mockito.mock(MotionSensorControl.class);
+
+        final HotelAutomationController hotelAutomationController = new HotelAutomationController(Collections.singletonList(
+                new Hotel(1, 2, 4)), motionSensorControl);
+
+        final SubCorridor firstSubCorridorOnFirstFloorInFirstHotel =
+                getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController.hotels());
+
+        Mockito.when(motionSensorControl.isMovement(firstSubCorridorOnFirstFloorInFirstHotel))
+                .thenReturn(true);
+
+        assertThat(getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController
+                .operate())
+                .getLight()
+                .isOn())
+                .isTrue();
+    }
+
+    private SubCorridor getFirstSubCorridorOnFirstFloorInFirstHotel(Collection<Hotel> hotels) {
+        return hotels.stream()
+                .flatMap(h -> h.getFloors().stream())
+                .flatMap(f -> f.getSubCorridors().stream())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No sub corridor found"));
+    }
+
 }

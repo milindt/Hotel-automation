@@ -1,13 +1,11 @@
-public class Corridor {
+public class Corridor implements MotionSensible {
 
     private final Light light;
     private final Ac ac;
-    private final MotionSensor motionSensor;
 
-    public Corridor(Light light, Ac ac, MotionSensor motionSensor) {
+    public Corridor(Light light, Ac ac) {
         this.light = light;
         this.ac = ac;
-        this.motionSensor = motionSensor;
     }
 
     public Light getLight() {
@@ -18,7 +16,4 @@ public class Corridor {
         return ac;
     }
 
-    public MotionSensor getSensor() {
-        return motionSensor;
-    }
 }
