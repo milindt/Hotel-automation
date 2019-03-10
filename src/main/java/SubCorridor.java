@@ -21,4 +21,9 @@ public class SubCorridor implements MotionSensible {
     public MotionSensorControl getSensor() {
         return motionSensor;
     }
+
+    public int getTotalPowerConsumption() {
+        return getLight().getUnits() + getAc().getUnits();
+    }
+
 }

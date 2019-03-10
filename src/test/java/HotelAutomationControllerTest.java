@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -8,11 +7,6 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HotelAutomationControllerTest {
-
-    @BeforeEach
-    void setUp() {
-        Hotel hotel = new Hotel(2, 2, 2);
-    }
 
     @Test
     void hotelCanHaveMultipleFloors() {
@@ -174,6 +168,107 @@ class HotelAutomationControllerTest {
                 .operate())
                 .getLight()
                 .isOn())
+                .isTrue();
+    }
+
+    @Test
+    void eachFloorShouldBeAbleTocalculateItsPowerConsumption() {
+        /*Considering the by default Sub corridor has lights off,
+        * the total power consumption should be 50*/
+        assertThat(new Floor(2, 2)
+                .totalPowerConsumption())
+                .isEqualTo(50);
+    }
+
+    @Test
+    void toKeepPowerConsumtionAsPerTheCriteriaControllerShouldTurnOffAcsInSubCorridorsWithoutMovement() {
+        final MotionSensorControl motionSensorControl = Mockito.mock(MotionSensorControl.class);
+
+        final int numberOfMainCorridors = 2;
+        final int numberOfSubCorridors = 4;
+        final HotelAutomationController hotelAutomationController = new HotelAutomationController(Collections.singletonList(
+                new Hotel(2, numberOfMainCorridors, numberOfSubCorridors)), motionSensorControl);
+
+        final SubCorridor subCorridorWithMovement =
+                getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController.hotels());
+
+
+        Mockito.when(motionSensorControl.isMovement(
+                subCorridorWithMovement))
+                .thenReturn(true);
+
+        assertThat(hotelAutomationController
+                .operate()
+                .stream()
+                .flatMap(h -> h.getFloors().stream())
+                .filter(hotelAutomationController::floorHasMovement)
+                .flatMap(f -> f.getSubCorridors().stream())
+                .allMatch(s -> s.getAc().isOff()))
+                .isTrue();
+
+        assertThat(hotelAutomationController.hotels()
+                .stream()
+                .flatMap(h -> h.getFloors().stream())
+                .filter(f -> f.totalPowerConsumption() >= 15*numberOfMainCorridors* +  10*numberOfSubCorridors)
+                .findAny())
+                .isNotPresent();
+    }
+
+    @Test
+    void whenThereIsNoMovementForOneMinSubCorridorLightsShouldBeOff() {
+        final MotionSensorControl motionSensorControl = Mockito.mock(MotionSensorControl.class);
+
+        final int numberOfMainCorridors = 2;
+        final int numberOfSubCorridors = 4;
+        final HotelAutomationController hotelAutomationController = new HotelAutomationController(Collections.singletonList(
+                new Hotel(2, numberOfMainCorridors, numberOfSubCorridors)), motionSensorControl);
+
+        Mockito.when(motionSensorControl.isMovement(
+                getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController.hotels())))
+                .thenReturn(true);
+
+        hotelAutomationController.operate();
+
+        Mockito.when(motionSensorControl.isMovement(
+                getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController.hotels())))
+                .thenReturn(false);
+
+        /*Assuming operate is called after 1 min*/
+        assertThat(hotelAutomationController
+                .operate()
+                .stream()
+                .flatMap(h -> h.getFloors().stream())
+                .flatMap(f -> f.getSubCorridors().stream())
+                .allMatch(s -> s.getLight().isOff()))
+                .isTrue();
+    }
+
+    @Test
+    void whenThereIsNoMovementForOneMinSubCorridorAcsShouldBeOn() {
+        final MotionSensorControl motionSensorControl = Mockito.mock(MotionSensorControl.class);
+
+        final int numberOfMainCorridors = 2;
+        final int numberOfSubCorridors = 4;
+        final HotelAutomationController hotelAutomationController = new HotelAutomationController(Collections.singletonList(
+                new Hotel(2, numberOfMainCorridors, numberOfSubCorridors)), motionSensorControl);
+
+        Mockito.when(motionSensorControl.isMovement(
+                getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController.hotels())))
+                .thenReturn(true);
+
+        hotelAutomationController.operate();
+
+        Mockito.when(motionSensorControl.isMovement(
+                getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController.hotels())))
+                .thenReturn(false);
+
+        /*Assuming operate is called after 1 min*/
+        assertThat(hotelAutomationController
+                .operate()
+                .stream()
+                .flatMap(h -> h.getFloors().stream())
+                .flatMap(f -> f.getSubCorridors().stream())
+                .allMatch(s -> s.getAc().isOn()))
                 .isTrue();
     }
 

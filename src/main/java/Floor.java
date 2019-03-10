@@ -8,7 +8,7 @@ public class Floor {
     public Floor(int numberOfMainCorridors, int numberOfSubCorridors) {
         corridors = new ArrayList();
         for(int corridorIndex=0;corridorIndex<numberOfMainCorridors;corridorIndex++) {
-            corridors.add(new Corridor(new Light(5, true), new Ac(0, true)));
+            corridors.add(new Corridor(new Light(5, true), new Ac(10, true)));
         }
         subCorridors = new ArrayList();
         for(int subCorridorIndex=0; subCorridorIndex<numberOfSubCorridors;subCorridorIndex++) {
@@ -23,5 +23,17 @@ public class Floor {
     public List<SubCorridor> getSubCorridors() {
         return subCorridors;
     }
+
+    public int totalPowerConsumption() {
+        return corridors.stream()
+                .map(Corridor::getTotalPowerConsumption)
+                .reduce(Integer::sum)
+                .orElse(0) +
+                subCorridors.stream()
+                .map(SubCorridor::getTotalPowerConsumption)
+                .reduce(Integer::sum)
+                .orElse(0);
+    }
+
 }
 

@@ -16,4 +16,8 @@ public class Corridor implements MotionSensible {
         return ac;
     }
 
+    public int getTotalPowerConsumption() {
+        return getLight().getUnits() + getAc().getUnits();
+    }
+
 }

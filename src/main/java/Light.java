@@ -11,17 +11,19 @@ public class Light {
         return on ? units : 0;
     }
 
-    public Light switchOff() {
-        this.on = false;
-        return this;
-    }
-
-    public Light switchOn() {
+    public void switchOn() {
         this.on = true;
-        return this;
     }
 
     public boolean isOn() {
         return on;
+    }
+
+    public boolean isOff() {
+        return !on;
+    }
+
+    public void switchOff() {
+        this.on = false;
     }
 }
