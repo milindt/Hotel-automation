@@ -49,7 +49,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneLight() {
-        assertThat(new Corridor(null,
+        assertThat(new Corridor(
                 Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
                 .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
                 .isEqualTo(ElectronicEquipment.LIGHT);
@@ -57,7 +57,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachSubCorridorsHasOneLight() {
-        assertThat(new SubCorridor(new Light(0, false), new Ac(0, false),
+        assertThat(new SubCorridor(
                 Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))
                 .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
                 .isEqualTo(ElectronicEquipment.LIGHT);
@@ -65,26 +65,28 @@ class HotelAutomationControllerTest {
 
     @Test
     void acConsumes10Units() {
-        assertThat(new Ac(10, true).getUnits()).isEqualTo(10);
+        assertThat(new ElectronicEquipment(ElectronicEquipment.AC,10, true).getUnits()).isEqualTo(10);
     }
 
     @Test
     void acConsumes0UnitsWhenOff() {
-        assertThat(new Ac(10, false).getUnits()).isEqualTo(0);
+        assertThat(new ElectronicEquipment(ElectronicEquipment.AC,10, false).getUnits()).isEqualTo(0);
     }
 
     @Test
     void eachCorridorsHasOneAc() {
-        assertThat(new Corridor(new Ac(0, false), Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
-                .getAc())
-                .isInstanceOf(Ac.class);
+        assertThat(new Corridor(
+                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.AC, 10, true)))
+                .getElectronicEquipment(ElectronicEquipment.AC).getType())
+                .isEqualTo(ElectronicEquipment.AC);
     }
 
     @Test
     void eachSubCorridorsHasOneAc() {
-        assertThat(new SubCorridor(null, new Ac(0, false), Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))
-                .getAc())
-                .isInstanceOf(Ac.class);
+        assertThat(new SubCorridor(
+                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.AC, 10, false)))
+                .getElectronicEquipment(ElectronicEquipment.AC).getType())
+                .isEqualTo(ElectronicEquipment.AC);
     }
 
     @Test
@@ -104,7 +106,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getSubCorridors().stream())
-                .map(SubCorridor::getLight)
+                .map(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT))
                 .forEach(l -> assertThat(l.isOn()).isFalse());
     }
 
@@ -115,7 +117,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getCorridors().stream())
-                .map(Corridor::getAc)
+                .map(c -> c.getElectronicEquipment(ElectronicEquipment.AC))
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
@@ -125,7 +127,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getSubCorridors().stream())
-                .map(SubCorridor::getLight)
+                .map(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT))
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
@@ -134,7 +136,7 @@ class HotelAutomationControllerTest {
         /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
-        assertThat(new Corridor(null, Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))).isInstanceOf(MotionSensible.class);
+        assertThat(new Corridor(Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))).isInstanceOf(MotionSensible.class);
     }
 
     @Test
@@ -142,7 +144,9 @@ class HotelAutomationControllerTest {
         /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
-        assertThat(new SubCorridor(null, null, Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))).isInstanceOf(MotionSensible.class);
+        assertThat(new SubCorridor(
+                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false))))
+                .isInstanceOf(MotionSensible.class);
     }
 
     @Test
@@ -169,7 +173,7 @@ class HotelAutomationControllerTest {
 
         assertThat(getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController
                 .operate())
-                .getLight()
+                .getElectronicEquipment(ElectronicEquipment.LIGHT)
                 .isOn())
                 .isTrue();
     }
@@ -206,7 +210,7 @@ class HotelAutomationControllerTest {
                 .flatMap(h -> h.getFloors().stream())
                 .filter(hotelAutomationController::floorHasMovement)
                 .flatMap(f -> f.getSubCorridors().stream())
-                .allMatch(s -> s.getAc().isOff()))
+                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.AC).isOff()))
                 .isTrue();
 
         assertThat(hotelAutomationController.hotels()
@@ -242,7 +246,7 @@ class HotelAutomationControllerTest {
                 .stream()
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
-                .allMatch(s -> s.getLight().isOff()))
+                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).isOff()))
                 .isTrue();
     }
 
@@ -271,7 +275,7 @@ class HotelAutomationControllerTest {
                 .stream()
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
-                .allMatch(s -> s.getAc().isOn()))
+                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.AC).isOn()))
                 .isTrue();
     }
 

@@ -4,11 +4,9 @@ import java.util.stream.Collectors;
 
 class Corridor implements MotionSensible {
 
-    private final Ac ac;
     private final Map<String, ElectronicEquipment> electronicEquipmentMap;
 
-    Corridor(Ac ac, Collection<ElectronicEquipment> equipments) {
-        this.ac = ac;
+    Corridor(Collection<ElectronicEquipment> equipments) {
         electronicEquipmentMap = equipments.stream().collect(Collectors.toMap(ElectronicEquipment::getType, v -> v));
     }
 
@@ -16,12 +14,13 @@ class Corridor implements MotionSensible {
         return electronicEquipmentMap.get(name);
     }
 
-    Ac getAc() {
-        return ac;
-    }
-
     int getTotalPowerConsumption() {
-        return getElectronicEquipment(ElectronicEquipment.LIGHT).getUnits() + getAc().getUnits();
+        return electronicEquipmentMap
+                .values()
+                .stream()
+                .map(ElectronicEquipment::getUnits)
+                .reduce(Integer::sum)
+                .orElse(0);
     }
 
 }

@@ -26,7 +26,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
                 .filter(s -> !motionSensorControl.isMovement(s))
-                .forEach(s -> s.getAc().switchOn());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.AC).switchOn());
     }
 
     private void switchOffSubCorridorLightsWithoutMovement() {
@@ -34,7 +34,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
                 .filter(s -> !motionSensorControl.isMovement(s))
-                .forEach(s -> s.getLight().switchOff());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).switchOff());
     }
 
     private void switchOffAllTheSubCorridorAcsAsPerCriteria() {
@@ -43,7 +43,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .filter(this::getFloorCriteria)
                 .flatMap(f -> f.getSubCorridors().stream())
-                .forEach(s -> s.getAc().switchOff());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.AC).switchOff());
     }
 
     private void switchOnSubCorridorLightsNearMovement() {
@@ -51,7 +51,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
                 .filter(s -> motionSensorControl.isMovement(s))
-                .forEach(s -> s.getLight().switchOn());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).switchOn());
     }
 
     private boolean getFloorCriteria(Floor floor) {

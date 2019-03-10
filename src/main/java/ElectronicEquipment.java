@@ -1,5 +1,6 @@
 public class ElectronicEquipment {
     public static final String LIGHT = "Light";
+    public static final String AC = "Ac";
     private String type;
     private int units;
     private boolean on;
