@@ -38,7 +38,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void lightConsumes5Units() {
-        assertThat(new Light(5, true).getUnits()).isEqualTo(5);
+        assertThat(new ElectronicEquipment("Light", 5, true).getUnits()).isEqualTo(5);
     }
 
     @Test
