@@ -34,3 +34,63 @@ Write a program that takes input values for Floors, Main corridors, Sub corridor
 different external inputs for motion in sub corridors. For each input, the program prints out the
 state of all the lights and ACs in the hotel. For simplicity, assume that the controller is operating
 at the Night Time.
+
+
+Sample input and output below -
+● Number of floors: 2
+● Main corridors per floor: 1
+● Sub corridors per floor: 2
+Subsequent Inputs from
+Sensors
+
+Output from controller for corresponding sensor input
+
+Default state (when the
+program is first run)
+
+Floor 1
+
+    Main corridor 1 Light 1 : ON AC : ON
+    Sub corridor 1 Light 1 : OFF AC : ON
+    Sub corridor 2 Light 2 : OFF AC : ON
+
+Floor 2
+
+    Main corridor 1 Light 1 : ON AC : ON
+    Sub corridor 1 Light 1 : OFF AC : ON
+    Sub corridor 2 Light 2 : OFF AC : ON
+
+Movement in Floor 1, Sub
+corridor 2
+
+Floor 1
+
+    Main corridor 1 Light 1 : ON AC : ON
+    Sub corridor 1 Light 1 : OFF AC : OFF
+    Sub corridor 2 Light 2 : ON​ AC : ON
+
+Floor 2
+
+    Main corridor 1 Light 1 : ON AC : ON
+    Sub corridor 1 Light 1 : OFF AC : ON
+    Sub corridor 2 Light 2 : OFF AC : ON
+
+No movement in Floor 1,
+Sub corridor 2 for a minute
+
+Floor 1
+
+    Main corridor 1 Light 1 : ON AC : ON
+    Sub corridor 1 Light 1 : OFF AC : ON
+    Sub corridor 2 Light 2 : OFF AC : ON
+
+Floor 2
+
+    Main corridor 1 Light 1 : ON AC : ON
+    Sub corridor 1 Light 1 : OFF AC : ON
+    Sub corridor 2 Light 2 : OFF AC : ON
+
+Since the hotel management is trying this for the first time, it would be changing the
+requirements as to which electronic equipments are controlled and the criteria based on which
+they are controlled. Therefore, the solution design should be flexible enough to absorb these
+changes without a need to make significant changes in the program.
