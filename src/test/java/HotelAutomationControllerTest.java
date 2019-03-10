@@ -49,7 +49,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneLight() {
-        assertThat(new Corridor(new Light(0, false), null,
+        assertThat(new Corridor(null,
                 Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
                 .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
                 .isEqualTo(ElectronicEquipment.LIGHT);
@@ -75,7 +75,7 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneAc() {
-        assertThat(new Corridor(null, new Ac(0, false), Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
+        assertThat(new Corridor(new Ac(0, false), Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
                 .getAc())
                 .isInstanceOf(Ac.class);
     }
@@ -94,7 +94,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getCorridors().stream())
-                .map(Corridor::getLight)
+                .map(c -> c.getElectronicEquipment(ElectronicEquipment.LIGHT))
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
@@ -134,7 +134,7 @@ class HotelAutomationControllerTest {
         /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
-        assertThat(new Corridor(null, null, Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))).isInstanceOf(MotionSensible.class);
+        assertThat(new Corridor(null, Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))).isInstanceOf(MotionSensible.class);
     }
 
     @Test
