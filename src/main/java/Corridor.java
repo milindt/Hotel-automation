@@ -1,23 +1,33 @@
-public class Corridor implements MotionSensible {
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+class Corridor implements MotionSensible {
 
     private final Light light;
     private final Ac ac;
+    private final Map<String, ElectronicEquipment> electronicEquipmentMap;
 
-    public Corridor(Light light, Ac ac) {
+    Corridor(Light light, Ac ac, Collection<ElectronicEquipment> equipments) {
         this.light = light;
         this.ac = ac;
+        electronicEquipmentMap = equipments.stream().collect(Collectors.toMap(ElectronicEquipment::getType, v -> v));
     }
 
-    public Light getLight() {
+    Light getLight() {
         return light;
     }
 
-    public Ac getAc() {
+    ElectronicEquipment getElectronicEquipment(String name) {
+        return electronicEquipmentMap.get(name);
+    }
+
+    Ac getAc() {
         return ac;
     }
 
-    public int getTotalPowerConsumption() {
-        return getLight().getUnits() + getAc().getUnits();
+    int getTotalPowerConsumption() {
+        return getElectronicEquipment("Light").getUnits() + getAc().getUnits();
     }
 
 }

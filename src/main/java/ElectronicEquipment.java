@@ -1,10 +1,11 @@
 public class ElectronicEquipment {
-    private String name;
+    public static final String LIGHT = "Light";
+    private String type;
     private int units;
     private boolean on;
 
-    public ElectronicEquipment(String name, int units, boolean on) {
-        this.name = name;
+    public ElectronicEquipment(String type, int units, boolean on) {
+        this.type = type;
         this.units = units;
         this.on = on;
     }
@@ -29,7 +30,7 @@ public class ElectronicEquipment {
         this.on = false;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 }

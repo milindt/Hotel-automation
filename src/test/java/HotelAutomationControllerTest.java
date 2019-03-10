@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -38,26 +39,28 @@ class HotelAutomationControllerTest {
 
     @Test
     void lightConsumes5Units() {
-        assertThat(new ElectronicEquipment("Light", 5, true).getUnits()).isEqualTo(5);
+        assertThat(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true).getUnits()).isEqualTo(5);
     }
 
     @Test
     void lightConsumes0UnitsWhenOff() {
-        assertThat(new Light(5, false).getUnits()).isEqualTo(0);
+        assertThat(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false).getUnits()).isEqualTo(0);
     }
 
     @Test
     void eachCorridorsHasOneLight() {
-        assertThat(new Corridor(new Light(0, false), null)
-                .getLight())
-                .isInstanceOf(Light.class);
+        assertThat(new Corridor(new Light(0, false), null,
+                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
+                .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
+                .isEqualTo(ElectronicEquipment.LIGHT);
     }
 
     @Test
     void eachSubCorridorsHasOneLight() {
-        assertThat(new SubCorridor(new Light(0, false), new Ac(0, false))
-                .getLight())
-                .isInstanceOf(Light.class);
+        assertThat(new SubCorridor(new Light(0, false), new Ac(0, false),
+                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))
+                .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
+                .isEqualTo(ElectronicEquipment.LIGHT);
     }
 
     @Test
@@ -72,14 +75,14 @@ class HotelAutomationControllerTest {
 
     @Test
     void eachCorridorsHasOneAc() {
-        assertThat(new Corridor(null, new Ac(0, false))
+        assertThat(new Corridor(null, new Ac(0, false), Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
                 .getAc())
                 .isInstanceOf(Ac.class);
     }
 
     @Test
     void eachSubCorridorsHasOneAc() {
-        assertThat(new SubCorridor(null, new Ac(0, false))
+        assertThat(new SubCorridor(null, new Ac(0, false), Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))
                 .getAc())
                 .isInstanceOf(Ac.class);
     }
@@ -131,7 +134,7 @@ class HotelAutomationControllerTest {
         /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
-        assertThat(new Corridor(null, null)).isInstanceOf(MotionSensible.class);
+        assertThat(new Corridor(null, null, Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))).isInstanceOf(MotionSensible.class);
     }
 
     @Test
@@ -139,7 +142,7 @@ class HotelAutomationControllerTest {
         /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
-        assertThat(new SubCorridor(null, null)).isInstanceOf(MotionSensible.class);
+        assertThat(new SubCorridor(null, null, Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))).isInstanceOf(MotionSensible.class);
     }
 
     @Test
