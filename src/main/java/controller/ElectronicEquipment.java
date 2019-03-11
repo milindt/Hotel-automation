@@ -1,8 +1,8 @@
+package controller;
+
 import java.util.Objects;
 
 public class ElectronicEquipment {
-    public static final String LIGHT = "Light";
-    public static final String AC = "Ac";
     private String type;
     private int units;
     private boolean on;
@@ -17,11 +17,7 @@ public class ElectronicEquipment {
         return on ? units : 0;
     }
 
-    public void switchOn() {
-        this.on = true;
-    }
-
-    public void switchIt(boolean on) {
+    void switchIt(boolean on) {
         this.on = on;
     }
 
@@ -31,10 +27,6 @@ public class ElectronicEquipment {
 
     public boolean isOff() {
         return !on;
-    }
-
-    public void switchOff() {
-        this.on = false;
     }
 
     public String getType() {

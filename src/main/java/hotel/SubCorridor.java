@@ -1,11 +1,16 @@
+package hotel;
+
+import controller.ElectronicEquipment;
+import sensors.MotionSensible;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class SubCorridor implements MotionSensible {
+public class SubCorridor implements MotionSensible {
     private final Map<String, ElectronicEquipment> electronicEquipmentMap;
 
-    SubCorridor(Collection<ElectronicEquipment> equipments) {
+    public SubCorridor(Collection<ElectronicEquipment> equipments) {
         electronicEquipmentMap = equipments.stream().collect(Collectors.toMap(ElectronicEquipment::getType, v -> v));
     }
 
@@ -18,7 +23,7 @@ class SubCorridor implements MotionSensible {
                 .orElse(0);
     }
 
-    ElectronicEquipment getElectronicEquipment(String name) {
+    public ElectronicEquipment getElectronicEquipment(String name) {
         return electronicEquipmentMap.get(name);
     }
 }

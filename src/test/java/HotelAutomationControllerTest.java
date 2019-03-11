@@ -1,7 +1,15 @@
+import controller.ElectronicEquipment;
+import controller.ElectronicEquipmentFactory;
+import controller.HotelAutomationController;
+import hotel.Corridor;
+import hotel.Floor;
+import hotel.Hotel;
+import hotel.SubCorridor;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import sensors.MotionSensible;
+import sensors.MotionSensorControl;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -39,54 +47,54 @@ class HotelAutomationControllerTest {
 
     @Test
     void lightConsumes5Units() {
-        assertThat(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true).getUnits()).isEqualTo(5);
+        assertThat(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, true).getUnits()).isEqualTo(5);
     }
 
     @Test
     void lightConsumes0UnitsWhenOff() {
-        assertThat(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false).getUnits()).isEqualTo(0);
+        assertThat(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, false).getUnits()).isEqualTo(0);
     }
 
     @Test
     void eachCorridorsHasOneLight() {
         assertThat(new Corridor(
-                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))
-                .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
-                .isEqualTo(ElectronicEquipment.LIGHT);
+                Collections.singletonList(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, true)))
+                .getElectronicEquipment(ElectronicEquipmentFactory.LIGHT).getType())
+                .isEqualTo(ElectronicEquipmentFactory.LIGHT);
     }
 
     @Test
     void eachSubCorridorsHasOneLight() {
         assertThat(new SubCorridor(
-                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false)))
-                .getElectronicEquipment(ElectronicEquipment.LIGHT).getType())
-                .isEqualTo(ElectronicEquipment.LIGHT);
+                Collections.singletonList(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, false)))
+                .getElectronicEquipment(ElectronicEquipmentFactory.LIGHT).getType())
+                .isEqualTo(ElectronicEquipmentFactory.LIGHT);
     }
 
     @Test
     void acConsumes10Units() {
-        assertThat(new ElectronicEquipment(ElectronicEquipment.AC,10, true).getUnits()).isEqualTo(10);
+        assertThat(new ElectronicEquipment(ElectronicEquipmentFactory.AC,10, true).getUnits()).isEqualTo(10);
     }
 
     @Test
     void acConsumes0UnitsWhenOff() {
-        assertThat(new ElectronicEquipment(ElectronicEquipment.AC,10, false).getUnits()).isEqualTo(0);
+        assertThat(new ElectronicEquipment(ElectronicEquipmentFactory.AC,10, false).getUnits()).isEqualTo(0);
     }
 
     @Test
     void eachCorridorsHasOneAc() {
         assertThat(new Corridor(
-                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.AC, 10, true)))
-                .getElectronicEquipment(ElectronicEquipment.AC).getType())
-                .isEqualTo(ElectronicEquipment.AC);
+                Collections.singletonList(new ElectronicEquipment(ElectronicEquipmentFactory.AC, 10, true)))
+                .getElectronicEquipment(ElectronicEquipmentFactory.AC).getType())
+                .isEqualTo(ElectronicEquipmentFactory.AC);
     }
 
     @Test
     void eachSubCorridorsHasOneAc() {
         assertThat(new SubCorridor(
-                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.AC, 10, false)))
-                .getElectronicEquipment(ElectronicEquipment.AC).getType())
-                .isEqualTo(ElectronicEquipment.AC);
+                Collections.singletonList(new ElectronicEquipment(ElectronicEquipmentFactory.AC, 10, false)))
+                .getElectronicEquipment(ElectronicEquipmentFactory.AC).getType())
+                .isEqualTo(ElectronicEquipmentFactory.AC);
     }
 
     @Test
@@ -96,7 +104,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getCorridors().stream())
-                .map(c -> c.getElectronicEquipment(ElectronicEquipment.LIGHT))
+                .map(c -> c.getElectronicEquipment(ElectronicEquipmentFactory.LIGHT))
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
@@ -106,7 +114,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getSubCorridors().stream())
-                .map(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT))
+                .map(s -> s.getElectronicEquipment(ElectronicEquipmentFactory.LIGHT))
                 .forEach(l -> assertThat(l.isOn()).isFalse());
     }
 
@@ -117,7 +125,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getCorridors().stream())
-                .map(c -> c.getElectronicEquipment(ElectronicEquipment.AC))
+                .map(c -> c.getElectronicEquipment(ElectronicEquipmentFactory.AC))
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
@@ -127,7 +135,7 @@ class HotelAutomationControllerTest {
                 .getFloors()
                 .stream()
                 .flatMap(f -> f.getSubCorridors().stream())
-                .map(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT))
+                .map(s -> s.getElectronicEquipment(ElectronicEquipmentFactory.LIGHT))
                 .forEach(l -> assertThat(l.isOn()).isTrue());
     }
 
@@ -136,7 +144,9 @@ class HotelAutomationControllerTest {
         /*Movement detection could be a push mechanism,
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
-        assertThat(new Corridor(Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true)))).isInstanceOf(MotionSensible.class);
+        assertThat(new Corridor(Collections.singletonList(
+                new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, true))))
+                .isInstanceOf(MotionSensible.class);
     }
 
     @Test
@@ -145,7 +155,7 @@ class HotelAutomationControllerTest {
          but for sake of simplicity we will poll the sensor
          for movement detection for now*/
         assertThat(new SubCorridor(
-                Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false))))
+                Collections.singletonList(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, false))))
                 .isInstanceOf(MotionSensible.class);
     }
 
@@ -173,7 +183,7 @@ class HotelAutomationControllerTest {
 
         assertThat(getFirstSubCorridorOnFirstFloorInFirstHotel(hotelAutomationController
                 .operate())
-                .getElectronicEquipment(ElectronicEquipment.LIGHT)
+                .getElectronicEquipment(ElectronicEquipmentFactory.LIGHT)
                 .isOn())
                 .isTrue();
     }
@@ -208,9 +218,9 @@ class HotelAutomationControllerTest {
                 .operate()
                 .stream()
                 .flatMap(h -> h.getFloors().stream())
-                .filter(hotelAutomationController::floorHasMovement)
+                .filter(floor -> floorHasMovement(floor, hotelAutomationController.hotels(), motionSensorControl))
                 .flatMap(f -> f.getSubCorridors().stream())
-                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.AC).isOff()))
+                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipmentFactory.AC).isOff()))
                 .isTrue();
 
         assertThat(hotelAutomationController.hotels()
@@ -246,7 +256,7 @@ class HotelAutomationControllerTest {
                 .stream()
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
-                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).isOff()))
+                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipmentFactory.LIGHT).isOff()))
                 .isTrue();
     }
 
@@ -275,7 +285,7 @@ class HotelAutomationControllerTest {
                 .stream()
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
-                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.AC).isOn()))
+                .allMatch(s -> s.getElectronicEquipment(ElectronicEquipmentFactory.AC).isOn()))
                 .isTrue();
     }
 
@@ -283,16 +293,16 @@ class HotelAutomationControllerTest {
     void aFactoryShouldCreateSubCorridorDevices() {
         assertThat(ElectronicEquipmentFactory.getSubCorridorDevices())
                 .hasSize(2)
-                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.AC, 10, true))
-                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false));
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipmentFactory.AC, 10, true))
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, false));
     }
 
     @Test
     void aFactoryShouldCreateCorridorDevices() {
         assertThat(ElectronicEquipmentFactory.getCorridorDevices())
                 .hasSize(2)
-                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.AC, 10, true))
-                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true));
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipmentFactory.AC, 10, true))
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipmentFactory.LIGHT, 5, true));
     }
 
     private SubCorridor getFirstSubCorridorOnFirstFloorInFirstHotel(Collection<Hotel> hotels) {
@@ -301,6 +311,18 @@ class HotelAutomationControllerTest {
                 .flatMap(f -> f.getSubCorridors().stream())
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No sub corridor found"));
+    }
+
+    boolean floorHasMovement(Floor floor, Collection<Hotel> hotels, MotionSensorControl motionSensorControl) {
+        //Not including main floors as of now..
+        return hotels.stream()
+                .flatMap(h -> h.getFloors().stream())
+                .filter(f -> f.equals(floor))
+                .findFirst()
+                .orElseThrow(RuntimeException::new)
+                .getSubCorridors()
+                .stream()
+                .anyMatch(motionSensorControl::isMovement);
     }
 
 }

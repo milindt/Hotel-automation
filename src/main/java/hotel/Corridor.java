@@ -1,16 +1,25 @@
+package hotel;
+
+import controller.ElectronicEquipment;
+import sensors.MotionSensible;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class Corridor implements MotionSensible {
+
+public class Corridor implements MotionSensible {
 
     private final Map<String, ElectronicEquipment> electronicEquipmentMap;
 
-    Corridor(Collection<ElectronicEquipment> equipments) {
-        electronicEquipmentMap = equipments.stream().collect(Collectors.toMap(ElectronicEquipment::getType, v -> v));
+    public Corridor(Collection<ElectronicEquipment> equipments) {
+        electronicEquipmentMap = equipments
+                .stream()
+                .collect(Collectors.toMap(
+                        ElectronicEquipment::getType, v -> v));
     }
 
-    ElectronicEquipment getElectronicEquipment(String name) {
+    public ElectronicEquipment getElectronicEquipment(String name) {
         return electronicEquipmentMap.get(name);
     }
 

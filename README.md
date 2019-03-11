@@ -1,16 +1,16 @@
-# Hotel-automation
-Hotel automation system for chain of Hotels
+# hotel.Hotel-automation
+hotel.Hotel automation system for chain of Hotels
 
 A very prestigious chain of hotels is facing a problem of huge consumption of electricity bills for
 its electronic equipments. The common equipments, like lights, ACs, etc are currently controlled
-manually, by the hotel staff, using manual switches. Hotel Management wants to optimise the
+manually, by the hotel staff, using manual switches. hotel.Hotel Management wants to optimise the
 usage of electricity consumption and also ensure that there is no inconvenience caused to the
 guests and staff. So, it has installed Motion Sensors at appropriate places and have approached
 you to program a Controller which takes inputs from these sensors and controls various
 equipments.
 The way the hotel equipments are organised and the requirements for the Controller are listed
 below:
-1. A Hotel can have multiple floors
+1. A hotel.Hotel can have multiple floors
 2. Each floor can have multiple main corridors and sub corridors
 3. Both main corridor and sub corridor have one light each
 4. Both main and sub corridor lights consume 5 units of power when ON
@@ -48,43 +48,43 @@ Output from controller for corresponding sensor input
 Default state (when the
 program is first run)
 
-Floor 1
+hotel.Floor 1
 
     Main corridor 1 Light 1 : ON AC : ON
     Sub corridor 1 Light 1 : OFF AC : ON
     Sub corridor 2 Light 2 : OFF AC : ON
 
-Floor 2
+hotel.Floor 2
 
     Main corridor 1 Light 1 : ON AC : ON
     Sub corridor 1 Light 1 : OFF AC : ON
     Sub corridor 2 Light 2 : OFF AC : ON
 
-Movement in Floor 1, Sub
+Movement in hotel.Floor 1, Sub
 corridor 2
 
-Floor 1
+hotel.Floor 1
 
     Main corridor 1 Light 1 : ON AC : ON
     Sub corridor 1 Light 1 : OFF AC : OFF
     Sub corridor 2 Light 2 : ON​ AC : ON
 
-Floor 2
+hotel.Floor 2
 
     Main corridor 1 Light 1 : ON AC : ON
     Sub corridor 1 Light 1 : OFF AC : ON
     Sub corridor 2 Light 2 : OFF AC : ON
 
-No movement in Floor 1,
+No movement in hotel.Floor 1,
 Sub corridor 2 for a minute
 
-Floor 1
+hotel.Floor 1
 
     Main corridor 1 Light 1 : ON AC : ON
     Sub corridor 1 Light 1 : OFF AC : ON
     Sub corridor 2 Light 2 : OFF AC : ON
 
-Floor 2
+hotel.Floor 2
 
     Main corridor 1 Light 1 : ON AC : ON
     Sub corridor 1 Light 1 : OFF AC : ON
