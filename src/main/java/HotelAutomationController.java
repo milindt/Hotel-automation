@@ -2,7 +2,7 @@ import java.util.Collection;
 
 class HotelAutomationController {
 
-    private Collection<Hotel> hotels;
+    private Collection<Hotel>   hotels;
     private MotionSensorControl motionSensorControl;
 
     HotelAutomationController(Collection<Hotel> hotels, MotionSensorControl motionSensorControl) {
@@ -26,7 +26,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
                 .filter(s -> !motionSensorControl.isMovement(s))
-                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.AC).switchOn());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.AC).switchIt(true));
     }
 
     private void switchOffSubCorridorLightsWithoutMovement() {
@@ -34,7 +34,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
                 .filter(s -> !motionSensorControl.isMovement(s))
-                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).switchOff());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).switchIt(false));
     }
 
     private void switchOffAllTheSubCorridorAcsAsPerCriteria() {
@@ -43,7 +43,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .filter(this::getFloorCriteria)
                 .flatMap(f -> f.getSubCorridors().stream())
-                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.AC).switchOff());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.AC).switchIt(false));
     }
 
     private void switchOnSubCorridorLightsNearMovement() {
@@ -51,7 +51,7 @@ class HotelAutomationController {
                 .flatMap(h -> h.getFloors().stream())
                 .flatMap(f -> f.getSubCorridors().stream())
                 .filter(s -> motionSensorControl.isMovement(s))
-                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).switchOn());
+                .forEach(s -> s.getElectronicEquipment(ElectronicEquipment.LIGHT).switchIt(true));
     }
 
     private boolean getFloorCriteria(Floor floor) {

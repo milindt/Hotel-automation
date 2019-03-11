@@ -90,7 +90,7 @@ class HotelAutomationControllerTest {
     }
 
     @Test
-    void mainCorridorHasAlltheListsOnByDefault() {
+    void mainCorridorHasAlltheLightsOnByDefault() {
         //Assuming only Night time
         new Hotel(2, 2, 0)
                 .getFloors()
@@ -277,6 +277,22 @@ class HotelAutomationControllerTest {
                 .flatMap(f -> f.getSubCorridors().stream())
                 .allMatch(s -> s.getElectronicEquipment(ElectronicEquipment.AC).isOn()))
                 .isTrue();
+    }
+
+    @Test
+    void aFactoryShouldCreateSubCorridorDevices() {
+        assertThat(ElectronicEquipmentFactory.getSubCorridorDevices())
+                .hasSize(2)
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.AC, 10, true))
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false));
+    }
+
+    @Test
+    void aFactoryShouldCreateCorridorDevices() {
+        assertThat(ElectronicEquipmentFactory.getCorridorDevices())
+                .hasSize(2)
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.AC, 10, true))
+                .containsOnlyOnce(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true));
     }
 
     private SubCorridor getFirstSubCorridorOnFirstFloorInFirstHotel(Collection<Hotel> hotels) {

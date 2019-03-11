@@ -9,15 +9,11 @@ public class Floor {
     public Floor(int numberOfMainCorridors, int numberOfSubCorridors) {
         corridors = new ArrayList();
         for(int corridorIndex=0;corridorIndex<numberOfMainCorridors;corridorIndex++) {
-            corridors.add(new Corridor(
-                    Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, true),
-                            new ElectronicEquipment(ElectronicEquipment.AC, 10, true))));
+            corridors.add(new Corridor(ElectronicEquipmentFactory.getCorridorDevices()));
         }
         subCorridors = new ArrayList();
         for(int subCorridorIndex=0; subCorridorIndex<numberOfSubCorridors;subCorridorIndex++) {
-            subCorridors.add(new SubCorridor(
-                    Arrays.asList(new ElectronicEquipment(ElectronicEquipment.LIGHT, 5, false),
-                    new ElectronicEquipment(ElectronicEquipment.AC, 10, true))));
+            subCorridors.add(new SubCorridor(ElectronicEquipmentFactory.getSubCorridorDevices()));
         }
     }
 
